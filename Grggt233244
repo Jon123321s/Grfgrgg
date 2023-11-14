@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+#include <map>
+
+// Функция для конвертирования чисел с арабского на римское
+std::string arabicToRoman(int num) {
+    std::map<int, std::string> romanMap; // Создаем map для хранения соответствий
+
+    // Заполняем map соответствиями арабских чисел и римских цифр
+    romanMap[1000] = "M";
+    romanMap[900] = "CM";
+    romanMap[500] = "D";
+    romanMap[400] = "CD";
+    romanMap[100] = "C";
+    romanMap[90] = "XC";
+    romanMap[50] = "L";
+    romanMap[40] = "XL";
+    romanMap[10] = "X";
+    romanMap[9] = "IX";
+    romanMap[5] = "V";
+    romanMap[4] = "IV";
+    romanMap[1] = "I";
+
+    std::string result = ""; // Результат конвертирования
+    // Проходим по map в порядке убывания ключей и проверяем, можно ли вычесть текущее значение
+    // из числа num. Если да, добавляем соответствующую римскую цифру к результату.
+    for (const auto& pair : romanMap) {
+        while (num >= pair.first) {
+            result += pair.second;
+            num -= pair.first;
+        }
+    }
+
+    return result;
+}
+
+// Функция для конвертирования чисел с римского на арабское
+int romanToArabic(const std::string& roman) {
+    std::map<char, int> romanMap; // Создаем map для хранения соответствий
+
+    // Заполняем map соответствиями римских цифр и арабских чисел
+    romanMap['M'] = 1000;
+    romanMap['D'] = 500;
+    romanMap['C'] = 100;
+    romanMap['L'] = 50;
+    romanMap['X'] = 10;
+    romanMap['V'] = 5;
+    romanMap['I'] = 1;
+
+    int result = 0; // Результат конвертирования
+    int prevValue = 0; // Значение предыдущей римской цифры
+    for (const char& c : roman) {
+        // Если текущая римская цифра больше или равна предыдущей, прибавляем значение к результату
+        if (romanMap[c] >= prevValue) {
+            result += romanMap[c];
+        }
+        // Иначе, вычитаем в два раза значение предыдущей римской цифры и прибавляем значение текущей
+        else {
+            result += romanMap[c] - 2 * prevValue;
+        }
+        prevValue = romanMap[c];
+    }
+
+    return result;
+}
+
+int main() {
+    int arabicNumber = 123; // Пример арабского числа
+    std::cout << "Arabic: " << arabicNumber << std::endl;
+    std::cout << "Roman: " << arabicToRoman(arabicNumber) << std::endl;
+
+    std::string romanNumber = "CXXIV"; // Пример римского числа
+    std::cout << "Roman: " << romanNumber << std::endl;
+    std::cout << "Arabic: " << romanToArabic(romanNumber) << std::endl;
+
+    return 0;
+}
+
